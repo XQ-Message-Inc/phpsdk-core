@@ -31,6 +31,7 @@ XQ Message is an encryption-as-a-service (EaaS) platform which gives you the too
 		- [Viewing your Access Token](#viewing-your-access-token)
 		- [Revoking Key Access](#revoking-key-access)
 		- [Granting and Revoking Message Access](#granting-and-revoking-message-access)
+		- [Connect to an alias account](#connect-to-an-alias-account)
 		- [Switching User Profiles](#switching-user-profiles)
 		- [Deleting a User](#deleting-a-user)
 
@@ -113,7 +114,7 @@ Before making most XQ API calls, the user will need a required bearer token. To 
 
 The user may utilize [Authorize](#authorization) to request an access token for a particular email address or telephone number, then use [CodeValidator](#code-validator) to validate and replace the temporary token they received previously for a valid access token.
 
-<!-- Optionally the user may utilize [AuthorizeAlias](#connect-to-an-alias-account) which allows them to immediately authorize an access token for a particular email address or telephone number. It should only be considered in situations wher 2FA is problematic/unecessary, such as IoT devices or trusted applications that have a different method for authenticating user information. -->
+Optionally the user may utilize [AuthorizeAlias](#connect-to-an-alias-account) which allows them to immediately authorize an access token for a particular email address or telephone number. It should only be considered in situations wher 2FA is problematic/unecessary, such as IoT devices or trusted applications that have a different method for authenticating user information.
 
 **_Note: This method only works for new email addresses/phone numbers that are not registered with XQ. If a previously registered account is used, an error will be returned._**
 
@@ -385,6 +386,25 @@ $response = RevokeKeyAccess::with($sdk)->runWith($token, $emailsToRemove );
 // Success - Joe's access to this message has been revoked.
 ```
 
+### Connect to an alias account
+
+After creation, a user can connect to an Alias account by using the AuthorizeAlias endpoint:
+
+```php
+$arguments = [
+	'user' => "john@email.com"
+];
+
+$response = RequestAliasAccess::with($sdk)->run( $arguments );
+if (!$response->succeeded()){
+	// Something went wrong...
+	echo . $response->status();
+	die();
+}
+// Success - The alias user was authorized.
+
+```
+
 <!-- TODO: Add Quantum Entropy -->
 <!-- TODO: Add Dashboard Management -->
 
@@ -424,4 +444,5 @@ if (!$response->succeeded()){
 }
 
 // Success - User has been successfully deleted.
+
 ```
